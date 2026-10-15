@@ -11,6 +11,16 @@ let selectedVehicle = null;
 let lastConfirmedBooking = null;
 let adminToken = sessionStorage.getItem('apexdrive_admin_token') || null;
 let activeAdminTab = 'bookings';
+const inrFormatter = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
+
+function formatINR(amount) {
+  return inrFormatter.format(Number(amount) || 0);
+}
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,12 +176,12 @@ function createVehicleCardHtml(v) {
   const categoryLabel = v.category || 'Standard';
 
   // Fallback image placeholder if offline
-  const safeImg = v.imageUrl || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80';
+  const safeImg = v.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/7/74/Mahindra_Thar_CRDi_%2816183560860%29.jpg';
 
   return `
     <article class="vehicle-card" data-id="${v.id}">
       <div class="card-image-wrap">
-        <img class="card-image" src="${safeImg}" alt="${escapeHtml(v.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80'">
+        <img class="card-image" src="${safeImg}" alt="${escapeHtml(v.name)}" loading="lazy" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/f/fa/Tata_Nexon_XM.jpg'">
         <span class="card-badge ${categoryBadgeClass}">${categoryLabel}</span>
         <span class="card-status ${isAvailable ? 'status-available' : 'status-booked'}">
           ${isAvailable ? '● Available' : '● Decommissioned'}
@@ -204,7 +214,7 @@ function createVehicleCardHtml(v) {
         <div class="card-footer">
           <div class="card-price-wrap">
             <span class="price-label">Daily Rental</span>
-            <div class="price-value">$${v.dailyPrice.toFixed(2)} <span>/ day</span></div>
+            <div class="price-value">${formatINR(v.dailyPrice)} <span>/ day</span></div>
           </div>
 
           <button class="btn btn-primary" onclick="openBookingModal(${v.id})" ${!isAvailable ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
@@ -253,10 +263,10 @@ async function openBookingModal(vehicleId) {
 
   const summary = document.getElementById('modalVehicleSummary');
   summary.innerHTML = `
-    <img src="${vehicle.imageUrl || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=600&q=80'}" class="summary-thumb" alt="${escapeHtml(vehicle.name)}">
+    <img src="${vehicle.imageUrl || 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Tata_Nexon_XM.jpg'}" class="summary-thumb" alt="${escapeHtml(vehicle.name)}">
     <div class="summary-info">
       <h4>${escapeHtml(vehicle.name)}</h4>
-      <p>$${vehicle.dailyPrice.toFixed(2)} / day &bull; ${vehicle.category}</p>
+      <p>${formatINR(vehicle.dailyPrice)} / day &bull; ${vehicle.category}</p>
     </div>
   `;
 
@@ -304,23 +314,23 @@ async function calculateLivePrice() {
     const quote = await response.json();
 
     document.getElementById('calcDuration').innerText = `${quote.rentalDays} day${quote.rentalDays > 1 ? 's' : ''}`;
-    document.getElementById('calcDailyRate').innerText = `$${quote.dailyPrice.toFixed(2)} / day`;
+    document.getElementById('calcDailyRate').innerText = `${formatINR(quote.dailyPrice)} / day`;
 
     const discountRow = document.getElementById('calcDiscountRow');
     const discountEl = document.getElementById('calcDiscount');
 
     if (quote.discountOrAdjustment < 0) {
-      discountEl.innerText = `-$${Math.abs(quote.discountOrAdjustment).toFixed(2)} (Subtype Discount)`;
+      discountEl.innerText = `-${formatINR(Math.abs(quote.discountOrAdjustment))} (Subtype Discount)`;
       discountEl.style.color = 'var(--accent-green)';
     } else if (quote.discountOrAdjustment > 0) {
-      discountEl.innerText = `+$${quote.discountOrAdjustment.toFixed(2)} (VIP Service Package)`;
+      discountEl.innerText = `+${formatINR(quote.discountOrAdjustment)} (VIP Service Package)`;
       discountEl.style.color = 'var(--accent-gold)';
     } else {
-      discountEl.innerText = '$0.00 (Standard)';
+      discountEl.innerText = `${formatINR(0)} (Standard)`;
       discountEl.style.color = 'var(--text-muted)';
     }
 
-    document.getElementById('calcTotalCost').innerText = `$${quote.finalTotal.toFixed(2)}`;
+    document.getElementById('calcTotalCost').innerText = formatINR(quote.finalTotal);
     document.getElementById('calcPerksText').innerHTML = `<strong>Included:</strong> ${escapeHtml(quote.perks || '')}`;
 
     const conflictAlert = document.getElementById('dateConflictAlert');
@@ -418,7 +428,7 @@ function openConfirmationModal(booking) {
     </div>
     <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; margin-top: 0.5rem;">
       <strong style="color: #fff;">Total Cost:</strong>
-      <strong style="color: var(--accent-cyan); font-size: 1.2rem;">$${booking.totalRentalCost.toFixed(2)}</strong>
+      <strong style="color: var(--accent-cyan); font-size: 1.2rem;">${formatINR(booking.totalRentalCost)}</strong>
     </div>
   `;
 
@@ -514,7 +524,7 @@ async function lookupByEmailOnly() {
 function renderBookingCardHtml(b) {
   const isCancelled = b.status === 'CANCELLED';
   const badgeClass = isCancelled ? 'booking-badge-cancelled' : 'booking-badge-confirmed';
-  const safeImg = b.vehicleImageUrl || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=400&q=80';
+  const safeImg = b.vehicleImageUrl || 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Tata_Nexon_XM.jpg';
 
   return `
     <div class="booking-item-card">
@@ -542,7 +552,7 @@ function renderBookingCardHtml(b) {
       <div style="text-align: right; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; gap: 0.75rem;">
         <div>
           <span style="font-size: 0.75rem; color: var(--text-dim); display: block;">Total Paid / Due</span>
-          <strong style="font-size: 1.4rem; color: #fff;">$${b.totalRentalCost.toFixed(2)}</strong>
+          <strong style="font-size: 1.4rem; color: #fff;">${formatINR(b.totalRentalCost)}</strong>
         </div>
 
         ${!isCancelled ? `
@@ -637,7 +647,7 @@ async function loadAdminStats() {
     document.getElementById('statAvailableVehicles').innerText = stats.availableVehicles;
     document.getElementById('statTotalBookings').innerText = stats.totalBookings;
     document.getElementById('statActiveBookings').innerText = stats.activeBookings;
-    document.getElementById('statGrossRevenue').innerText = `$${stats.totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('statGrossRevenue').innerText = formatINR(stats.totalRevenue);
   } catch (err) {
     console.error('Failed to load admin stats:', err);
   }
@@ -693,7 +703,7 @@ async function loadAdminBookings() {
             <div style="font-size: 0.75rem; color: var(--text-dim);">${escapeHtml(b.customerEmail)}</div>
           </td>
           <td>${b.pickupDate} &rarr; ${b.returnDate} (${b.rentalDays}d)</td>
-          <td><strong>$${b.totalRentalCost.toFixed(2)}</strong></td>
+          <td><strong>${formatINR(b.totalRentalCost)}</strong></td>
           <td><span class="${isCancelled ? 'booking-badge-cancelled' : 'booking-badge-confirmed'}">${b.status}</span></td>
           <td>
             ${!isCancelled ? `
@@ -754,7 +764,7 @@ async function loadAdminVehicles() {
           <strong>${escapeHtml(v.name)}</strong>
         </td>
         <td><span class="badge-${v.category ? v.category.toLowerCase() : 'sedan'}" style="padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">${v.category}</span></td>
-        <td>$${v.dailyPrice.toFixed(2)} / day</td>
+        <td>${formatINR(v.dailyPrice)} / day</td>
         <td>${escapeHtml(v.transmission)} &bull; ${escapeHtml(v.fuelType)}</td>
         <td>
           <span style="color: ${v.available ? 'var(--accent-green)' : '#f87171'}; font-weight: bold;">

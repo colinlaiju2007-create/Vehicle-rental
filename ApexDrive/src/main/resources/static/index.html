@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ApexDrive — Precision Luxury & Performance Vehicle Rentals</title>
-  <meta name="description" content="Experience world-class sports, luxury, and electric performance vehicles. Real-time availability, instant quotes, and seamless reservations.">
+  <title>ApexDrive — Indian Car Rentals</title>
+  <meta name="description" content="Book popular Indian-market cars with live availability, instant rental quotes, and seamless reservations.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
 </head>
@@ -54,7 +54,7 @@
         </h1>
 
         <p class="hero-description">
-          Rent world-class sports cars, executive sedans, and high-performance electric vehicles.
+          Rent popular Indian cars, from city-friendly hatchbacks to spacious SUVs and family vehicles.
           Live SQLite database reservation, intelligent date overlap protection, and instant confirmation.
         </p>
 
@@ -86,10 +86,10 @@
             <label class="input-label" for="searchMaxPrice">Max Budget / Day</label>
             <select id="searchMaxPrice" class="input-field">
               <option value="">Any Daily Rate</option>
-              <option value="300">Under $300 / day</option>
-              <option value="450">Under $450 / day</option>
-              <option value="600">Under $600 / day</option>
-              <option value="1000">Under $1000 / day</option>
+              <option value="2500">Under ₹2,500 / day</option>
+              <option value="4000">Under ₹4,000 / day</option>
+              <option value="6000">Under ₹6,000 / day</option>
+              <option value="10000">Under ₹10,000 / day</option>
             </select>
           </div>
 
@@ -318,7 +318,7 @@
 
             <div class="stat-card">
               <span class="stat-label">Gross Revenue</span>
-              <span class="stat-value gold" id="statGrossRevenue">$0</span>
+              <span class="stat-value gold" id="statGrossRevenue">₹0</span>
             </div>
           </div>
 
@@ -432,15 +432,15 @@
           </div>
           <div class="breakdown-row">
             <span>Base Daily Rate:</span>
-            <span id="calcDailyRate">$0 / day</span>
+            <span id="calcDailyRate">₹0 / day</span>
           </div>
           <div class="breakdown-row" id="calcDiscountRow">
             <span>Subtype Adjustment / Perks:</span>
-            <span id="calcDiscount" class="discount-badge">$0</span>
+            <span id="calcDiscount" class="discount-badge">₹0</span>
           </div>
           <div class="breakdown-row total">
             <span>Total Projected Cost:</span>
-            <span id="calcTotalCost" class="price-highlight">$0</span>
+            <span id="calcTotalCost" class="price-highlight">₹0</span>
           </div>
           <div id="calcPerksText" style="margin-top: 0.5rem; font-size: 0.78rem; color: #93c5fd;"></div>
         </div>
@@ -572,8 +572,8 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
           <div class="input-group">
-            <label class="input-label" for="vPrice">Daily Price ($) *</label>
-            <input type="number" id="vPrice" class="input-field" step="0.01" min="1" placeholder="350.00" required>
+            <label class="input-label" for="vPrice">Daily Price (₹) *</label>
+            <input type="number" id="vPrice" class="input-field" step="0.01" min="1" placeholder="3500.00" required>
           </div>
 
           <div class="input-group">
