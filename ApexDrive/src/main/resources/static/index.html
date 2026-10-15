@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApexDrive — Precision Luxury & Performance Vehicle Rentals</title>
+  <meta name="description" content="Experience world-class sports, luxury, and electric performance vehicles. Real-time availability, instant quotes, and seamless reservations.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#home" class="brand-logo" onclick="navigateTo('home')">
+        <div class="brand-icon">▲</div>
+        <span>APEX<span style="color: var(--accent-cyan);">DRIVE</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home" class="nav-link active" onclick="navigateTo('home')">Home</a></li>
+          <li><a href="#fleet" class="nav-link" onclick="navigateTo('fleet')">Fleet</a></li>
+          <li><a href="#how-it-works" class="nav-link" onclick="navigateTo('how-it-works')">How It Works</a></li>
+          <li><a href="#my-bookings" class="nav-link" onclick="navigateTo('my-bookings')">My Bookings</a></li>
+          <li><a href="#admin" class="nav-link" onclick="navigateTo('admin')">Admin Portal</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-primary btn-sm" onclick="scrollToFleet()">
+          Explore Fleet &rarr;
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main>
+
+    <!-- SECTION: HOME / HERO -->
+    <section id="home" class="hero">
+      <div class="hero-glow"></div>
+      <div class="container hero-content">
+        <div class="hero-badge">
+          <div class="hero-badge-pulse"></div>
+          <span>Java 21 &amp; SQLite Powered Architecture</span>
+        </div>
+
+        <h1 class="hero-title">
+          Engineered for Distinction.<br>
+          <span>Driven by Precision.</span>
+        </h1>
+
+        <p class="hero-description">
+          Rent world-class sports cars, executive sedans, and high-performance electric vehicles.
+          Live SQLite database reservation, intelligent date overlap protection, and instant confirmation.
+        </p>
+
+        <!-- Interactive Search & Filter Widget -->
+        <div class="search-widget">
+          <div class="input-group">
+            <label class="input-label" for="searchCategory">Category</label>
+            <select id="searchCategory" class="input-field">
+              <option value="">All Categories</option>
+              <option value="SPORTS">Sports Performance</option>
+              <option value="LUXURY">Luxury Executive</option>
+              <option value="ELECTRIC">Electric Vehicles</option>
+              <option value="SUV">Luxury SUV</option>
+              <option value="SEDAN">Executive Sedan</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="searchPickupDate">Pickup Date</label>
+            <input type="date" id="searchPickupDate" class="input-field">
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="searchReturnDate">Return Date</label>
+            <input type="date" id="searchReturnDate" class="input-field">
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="searchMaxPrice">Max Budget / Day</label>
+            <select id="searchMaxPrice" class="input-field">
+              <option value="">Any Daily Rate</option>
+              <option value="300">Under $300 / day</option>
+              <option value="450">Under $450 / day</option>
+              <option value="600">Under $600 / day</option>
+              <option value="1000">Under $1000 / day</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" style="height: 48px;" onclick="applyHeroSearch()">
+            Search Cars
+          </button>
+        </div>
+
+        <!-- System Architecture Highlights -->
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-box">⚡</div>
+            <div>
+              <h4 class="feature-title">Real SQLite Persistence</h4>
+              <p class="feature-desc">All vehicles and bookings are committed to the on-disk <code>apexdrive.db</code> database via Spring Data JPA.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">🛡️</div>
+            <div>
+              <h4 class="feature-title">Overlap Date Prevention</h4>
+              <p class="feature-desc">The backend dynamically evaluates date windows and prevents double-booking active reservations.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box">🧬</div>
+            <div>
+              <h4 class="feature-title">OOP Polymorphic Rates</h4>
+              <p class="feature-desc">Luxury, sports, and electric vehicles override rental calculations with tailored perks and volume discounts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: FLEET CATALOG -->
+    <section id="fleet" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">The Apex Fleet</div>
+          <h2 class="section-title">Select Your Driving Machine</h2>
+          <p class="section-description">
+            Filter our premium fleet by category, price, and availability. Every vehicle is maintained to peak factory specification.
+          </p>
+        </div>
+
+        <!-- Fleet Controls: Filter Pills & Sorting -->
+        <div class="fleet-controls">
+          <div class="filter-pills" id="categoryPills">
+            <button class="filter-pill active" onclick="setFleetFilter('')">All Fleet</button>
+            <button class="filter-pill" onclick="setFleetFilter('SPORTS')">Sports</button>
+            <button class="filter-pill" onclick="setFleetFilter('LUXURY')">Luxury</button>
+            <button class="filter-pill" onclick="setFleetFilter('ELECTRIC')">Electric</button>
+            <button class="filter-pill" onclick="setFleetFilter('SUV')">SUV</button>
+            <button class="filter-pill" onclick="setFleetFilter('SEDAN')">Sedan</button>
+          </div>
+
+          <div class="fleet-sorting">
+            <label for="sortSelector" style="font-size: 0.85rem; color: var(--text-muted);">Sort By:</label>
+            <select id="sortSelector" onchange="renderFleetGrid()">
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Vehicle Name: A to Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Vehicle Grid -->
+        <div class="vehicle-grid" id="vehicleGrid">
+          <!-- Rendered dynamically by JavaScript -->
+          <div style="grid-column: 1/-1; text-align: center; padding: 4rem 0;">
+            <p style="color: var(--text-muted);">Loading ApexDrive fleet from database...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: HOW IT WORKS -->
+    <section id="how-it-works" class="section" style="background: rgba(17, 23, 38, 0.4); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Streamlined Process</div>
+          <h2 class="section-title">How ApexDrive Works</h2>
+          <p class="section-description">Simple, transparent, and verified vehicle reservations in 3 steps.</p>
+        </div>
+
+        <div class="features-grid" style="margin-top: 0;">
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan);">1</div>
+            <div>
+              <h4 class="feature-title">Select Dates &amp; Model</h4>
+              <p class="feature-desc">Choose your pickup and return dates. The backend instantly calculates polymorphic discounts and checks calendar availability.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">2</div>
+            <div>
+              <h4 class="feature-title">Verify Contact &amp; Reserve</h4>
+              <p class="feature-desc">Provide your contact details. A unique cryptographic reservation reference code (e.g. <code>APX-XXXX-XXXX</code>) is generated.</p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon-box" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-green);">3</div>
+            <div>
+              <h4 class="feature-title">Drive &amp; Manage Anytime</h4>
+              <p class="feature-desc">Lookup your booking receipt or cancel with zero penalty through your reference code and registered email.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: MY BOOKINGS / LOOKUP -->
+    <section id="my-bookings" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Customer Portal</div>
+          <h2 class="section-title">Manage Your Reservations</h2>
+          <p class="section-description">
+            View booking details, print receipts, or cancel your reservation. Enter your unique Booking Reference and matching Customer Email to access records.
+          </p>
+        </div>
+
+        <!-- Lookup Form -->
+        <div class="lookup-card">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) auto; gap: 1rem; align-items: flex-end;">
+            <div class="input-group">
+              <label class="input-label" for="lookupRef">Booking Reference</label>
+              <input type="text" id="lookupRef" class="input-field" placeholder="e.g. APX-9A2B-3C4D">
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="lookupEmail">Customer Email</label>
+              <input type="email" id="lookupEmail" class="input-field" placeholder="e.g. customer@example.com">
+            </div>
+
+            <button class="btn btn-primary" style="height: 48px;" onclick="lookupBookingRecord()">
+              Search Booking
+            </button>
+          </div>
+
+          <div style="margin-top: 1.25rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+            <button class="btn btn-outline btn-sm" onclick="lookupByEmailOnly()">
+              🔍 Or View All Bookings for this Email Address
+            </button>
+          </div>
+        </div>
+
+        <!-- Booking Result Container -->
+        <div class="booking-history-list" id="myBookingsList">
+          <div style="text-align: center; color: var(--text-dim); padding: 2rem 0;">
+            Enter your booking reference above to inspect your reservation details.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: ADMIN PORTAL -->
+    <section id="admin" class="section" style="background: rgba(10, 13, 20, 0.7); border-top: 1px solid var(--border-subtle);">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-subtitle">Administrative Control</div>
+          <h2 class="section-title">Fleet Management &amp; Analytics</h2>
+          <p class="section-description">
+            Secure administrative dashboard for monitoring reservations, fleet revenue, and managing vehicle availability.
+          </p>
+        </div>
+
+        <!-- Admin Login Panel (shown when unauthenticated) -->
+        <div id="adminLoginPanel" class="lookup-card" style="max-width: 480px; text-align: center;">
+          <h3 style="font-size: 1.35rem; color: #fff; margin-bottom: 0.5rem;">Admin Authentication Required</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Enter credentials to manage fleet vehicles and access operational metrics.
+          </p>
+
+          <form onsubmit="handleAdminLogin(event)">
+            <div class="input-group" style="margin-bottom: 1rem; text-align: left;">
+              <label class="input-label" for="adminUser">Username</label>
+              <input type="text" id="adminUser" class="input-field" value="admin" required>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 1.5rem; text-align: left;">
+              <label class="input-label" for="adminPass">Password</label>
+              <input type="password" id="adminPass" class="input-field" value="ApexAdmin2026!" required>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Sign In to Admin Portal
+              </button>
+            </div>
+
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-dim);">
+              Default college demo credentials: <code>admin</code> / <code>ApexAdmin2026!</code>
+            </p>
+          </form>
+        </div>
+
+        <!-- Admin Authenticated Dashboard View -->
+        <div id="adminDashboardView" style="display: none;">
+          <!-- Top Stats Bar -->
+          <div class="admin-stats-grid">
+            <div class="stat-card">
+              <span class="stat-label">Total Fleet Size</span>
+              <span class="stat-value highlight" id="statTotalVehicles">0</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Available Cars</span>
+              <span class="stat-value" id="statAvailableVehicles" style="color: var(--accent-green);">0</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Total Bookings</span>
+              <span class="stat-value" id="statTotalBookings">0</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Active Bookings</span>
+              <span class="stat-value" id="statActiveBookings" style="color: var(--accent-cyan);">0</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-label">Gross Revenue</span>
+              <span class="stat-value gold" id="statGrossRevenue">$0</span>
+            </div>
+          </div>
+
+          <!-- Admin Tabs & Actions Bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="admin-tabs" style="margin-bottom: 0;">
+              <button class="admin-tab-btn active" id="tabBtnBookings" onclick="switchAdminTab('bookings')">
+                All Reservations
+              </button>
+              <button class="admin-tab-btn" id="tabBtnVehicles" onclick="switchAdminTab('vehicles')">
+                Fleet Management
+              </button>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+              <button class="btn btn-gold btn-sm" onclick="openAddVehicleModal()">
+                + Add New Vehicle
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="handleAdminLogout()">
+                Sign Out
+              </button>
+            </div>
+          </div>
+
+          <!-- Admin Tab 1: Bookings Management Table -->
+          <div id="adminTabBookings" class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ref #</th>
+                  <th>Vehicle</th>
+                  <th>Customer</th>
+                  <th>Dates (Duration)</th>
+                  <th>Total Cost</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminBookingsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Admin Tab 2: Vehicle Management Table -->
+          <div id="adminTabVehicles" class="data-table-container" style="display: none;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Vehicle</th>
+                  <th>Category</th>
+                  <th>Daily Price</th>
+                  <th>Transmission / Fuel</th>
+                  <th>Fleet Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminVehiclesTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: BOOKING FORM & INSTANT QUOTE -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+      
+      <div class="modal-header">
+        <h3 class="modal-title">Reserve Vehicle</h3>
+        <p class="modal-subtitle">Configure your rental dates and review the instant polymorphic quote.</p>
+      </div>
+
+      <!-- Vehicle Preview Card -->
+      <div class="modal-vehicle-summary" id="modalVehicleSummary">
+        <!-- Injected via JS -->
+      </div>
+
+      <form id="bookingForm" onsubmit="submitBooking(event)">
+        <input type="hidden" id="bookVehicleId">
+
+        <!-- Date Selection Row -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+          <div class="input-group">
+            <label class="input-label" for="bookPickupDate">Pickup Date *</label>
+            <input type="date" id="bookPickupDate" class="input-field" required onchange="calculateLivePrice()">
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="bookReturnDate">Return Date *</label>
+            <input type="date" id="bookReturnDate" class="input-field" required onchange="calculateLivePrice()">
+          </div>
+        </div>
+
+        <!-- Overlap Alert Warning (Hidden by default) -->
+        <div id="dateConflictAlert" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: var(--radius-sm); padding: 0.85rem; color: #fca5a5; font-size: 0.85rem; margin-bottom: 1.25rem;">
+          ⚠️ <strong>Vehicle Unavailable:</strong> This vehicle is already reserved for the selected dates. Please choose another date window.
+        </div>
+
+        <!-- Dynamic Live Price Breakdown -->
+        <div class="price-breakdown-card" id="priceBreakdownCard">
+          <div class="breakdown-row">
+            <span>Rental Duration:</span>
+            <span id="calcDuration">1 day</span>
+          </div>
+          <div class="breakdown-row">
+            <span>Base Daily Rate:</span>
+            <span id="calcDailyRate">$0 / day</span>
+          </div>
+          <div class="breakdown-row" id="calcDiscountRow">
+            <span>Subtype Adjustment / Perks:</span>
+            <span id="calcDiscount" class="discount-badge">$0</span>
+          </div>
+          <div class="breakdown-row total">
+            <span>Total Projected Cost:</span>
+            <span id="calcTotalCost" class="price-highlight">$0</span>
+          </div>
+          <div id="calcPerksText" style="margin-top: 0.5rem; font-size: 0.78rem; color: #93c5fd;"></div>
+        </div>
+
+        <!-- Customer Identity Fields -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="input-group">
+            <label class="input-label" for="bookCustName">Full Name *</label>
+            <input type="text" id="bookCustName" class="input-field" placeholder="e.g. John Doe" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="bookCustEmail">Email Address *</label>
+            <input type="email" id="bookCustEmail" class="input-field" placeholder="e.g. john@example.com" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="input-group">
+            <label class="input-label" for="bookCustPhone">Phone Number *</label>
+            <input type="tel" id="bookCustPhone" class="input-field" placeholder="e.g. +1 555 123 4567" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="bookDriverLicense">Driver's License #</label>
+            <input type="text" id="bookDriverLicense" class="input-field" placeholder="e.g. DL-8899201">
+          </div>
+        </div>
+
+        <div class="input-group" style="margin-bottom: 1.25rem;">
+          <label class="input-label" for="bookSpecialRequests">Special Requests / VIP Notes</label>
+          <textarea id="bookSpecialRequests" class="input-field" rows="2" placeholder="e.g. Airport terminal delivery, child seat, extra driver..."></textarea>
+        </div>
+
+        <!-- Demo Payment Notice (Fulfills security & demonstration guideline) -->
+        <div class="demo-payment-box">
+          <strong>⚠️ DEMO PAYMENT SIMULATION ONLY</strong>
+          <span>This academic demonstration validates transactions without processing real currency. Payment details are not stored on disk.</span>
+          <div style="margin-top: 0.75rem; display: flex; gap: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); font-size: 0.85rem; cursor: pointer;">
+              <input type="radio" name="demoPayMethod" value="card" checked> Instant Demo Card
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-main); font-size: 0.85rem; cursor: pointer;">
+              <input type="radio" name="demoPayMethod" value="pickup"> Pay on Pickup / Delivery
+            </label>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" onclick="closeBookingModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitBooking">
+            Confirm Reservation &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: BOOKING CONFIRMATION & RECEIPT -->
+  <div class="modal-overlay" id="confirmationModal">
+    <div class="modal-container" style="max-width: 580px;">
+      <button class="modal-close" onclick="closeConfirmationModal()">&times;</button>
+      
+      <div class="confirmation-card">
+        <div class="confirm-icon-box">✓</div>
+        <h3 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem;">Reservation Confirmed!</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          Your booking has been written to the SQLite database (<code>apexdrive.db</code>).
+        </p>
+
+        <div class="ref-code-box">
+          <div>
+            <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); text-align: left;">Booking Reference</div>
+            <div class="ref-code" id="confirmRefCode">APX-XXXX-XXXX</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="copyBookingRef()">
+            Copy Code
+          </button>
+        </div>
+
+        <!-- Summary Details -->
+        <div id="confirmSummaryDetails" style="text-align: left; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; font-size: 0.9rem;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.75rem;">
+          <button class="btn btn-outline" onclick="window.print()">
+            Print Receipt
+          </button>
+          <button class="btn btn-primary" onclick="viewInMyBookings()">
+            View in My Bookings &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT VEHICLE (ADMIN) -->
+  <div class="modal-overlay" id="vehicleModal">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeVehicleModal()">&times;</button>
+      
+      <div class="modal-header">
+        <h3 class="modal-title" id="vehicleModalTitle">Add New Vehicle</h3>
+        <p class="modal-subtitle">Save a new vehicle item to the SQLite database fleet catalog.</p>
+      </div>
+
+      <form id="vehicleForm" onsubmit="submitVehicleForm(event)">
+        <input type="hidden" id="vAdminId">
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="input-group">
+            <label class="input-label" for="vName">Vehicle Name *</label>
+            <input type="text" id="vName" class="input-field" placeholder="e.g. Aston Martin Vantage" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="vCategory">Category *</label>
+            <select id="vCategory" class="input-field" required>
+              <option value="SPORTS">SPORTS</option>
+              <option value="LUXURY">LUXURY</option>
+              <option value="ELECTRIC">ELECTRIC</option>
+              <option value="SUV">SUV</option>
+              <option value="SEDAN">SEDAN</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="input-group">
+            <label class="input-label" for="vPrice">Daily Price ($) *</label>
+            <input type="number" id="vPrice" class="input-field" step="0.01" min="1" placeholder="350.00" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="vTransmission">Transmission *</label>
+            <input type="text" id="vTransmission" class="input-field" placeholder="Automatic" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="vSeats">Seating *</label>
+            <input type="number" id="vSeats" class="input-field" min="1" max="12" value="4" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="input-group">
+            <label class="input-label" for="vFuel">Fuel Type *</label>
+            <input type="text" id="vFuel" class="input-field" placeholder="Petrol / Electric" required>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="vImageUrl">Image URL *</label>
+            <input type="url" id="vImageUrl" class="input-field" placeholder="https://..." required>
+          </div>
+        </div>
+
+        <div class="input-group" style="margin-bottom: 1.5rem;">
+          <label class="input-label" for="vSpecs">Specifications Description</label>
+          <textarea id="vSpecs" class="input-field" rows="2" placeholder="e.g. 4.0L Twin-Turbo V8, 503 HP, Carbon brakes..."></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+          <button type="button" class="btn btn-outline" onclick="closeVehicleModal()">Cancel</button>
+          <button type="submit" class="btn btn-gold">Save Vehicle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div class="brand-icon" style="width: 28px; height: 28px; font-size: 0.9rem;">▲</div>
+        <span style="font-weight: 700; color: #fff;">ApexDrive</span>
+        <span style="color: var(--text-dim);">| College Java OOP Project</span>
+      </div>
+
+      <div>
+        <span>Java 21 &bull; Spring Boot &bull; SQLite &bull; JPA &bull; Clean OOP Architecture</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

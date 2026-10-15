@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: apexdrive
+    runtime: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/vehicles
+    disk:
+      name: apexdrive-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: APEXDRIVE_DB_URL
+        value: jdbc:sqlite:/var/data/apexdrive.db
+      - key: APEXDRIVE_ADMIN_USERNAME
+        sync: false
+      - key: APEXDRIVE_ADMIN_PASSWORD
+        sync: false

@@ -1,0 +1,6 @@
+target/
+tools/
+*.db
+*.db-shm
+*.db-wal
+.git/
